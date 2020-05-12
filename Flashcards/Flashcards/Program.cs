@@ -11,7 +11,7 @@ namespace Flashcards
     {
         static async Task<int> Main(string[] args)
         {
-            ModeSelector modeSelector = new ModeSelector();
+            ModeSelector modeSelector = new ModeSelector(new ConsoleUserInteractor());
             await modeSelector.Run();
             var paths = Directory.GetDirectories("D:\\temp");
             List<string> results = new List<string>();

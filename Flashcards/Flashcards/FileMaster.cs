@@ -34,15 +34,19 @@ namespace Flashcards
                 return DesToLFlashcard(dataJson);
             }
         }
-        public List<string> GetTopics(string path)
+        public List<string> GetDirectoriesName(string path)
         {
-            var topicsPaths = Directory.GetDirectories(path);
+            var topicsPaths = GetDirectoriesPath(path);
             List<string> topics = new List<string>();
             foreach (var topicPath in topicsPaths)
             {
                 topics.Add(Path.GetFileName(topicPath));
             }
             return topics;
+        }
+        public string[] GetDirectoriesPath(string path)
+        {
+            return Directory.GetDirectories(path);
         }
         public void CreateDirectory(string path)
         {

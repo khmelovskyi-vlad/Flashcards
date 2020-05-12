@@ -8,26 +8,34 @@ namespace Flashcards
 {
     class ModeSelector
     {
+        public ModeSelector(IUserInteractor userInteractor)
+        {
+            this.userInteractor = userInteractor;
+        }
+        private IUserInteractor userInteractor;
         private FileMaster fileMaster = new FileMaster();
+        private TopicMet topicMet;
         public async Task Run()
         {
+            topicMet = new TopicMet(fileMaster, userInteractor);
+            topicMet.FindTopics();
             while (true)
             {
-                Console.WriteLine("What do you want to do?\n\r" +
+                var key = userInteractor.QuestionAnswerKey("What do you want to do?\n\r" +
                     "If you want to add cards, press 'a'\n\r" +
                     "If you want to learn cards, press 'l'\n\r" +
                     "If you want to exit the application, press 'Esc'");
-                var key = Console.ReadKey(true);
-                switch (key.Key)
+                switch (key)
                 {
-                    case ConsoleKey.A:
-                        Input input = new Input(fileMaster);
+                    case UserAction.A:
+                        Input input = new Input(fileMaster, userInteractor, topicMet);
                         await input.Run();
                         break;
-                    case ConsoleKey.L:
-                        Console.WriteLine();
+                    case UserAction.L:
+                        Study study = new Study(fileMaster, userInteractor, topicMet);
+                        await study.Run();
                         break;
-                    case ConsoleKey.Escape:
+                    case UserAction.Escape:
                         Console.WriteLine("bye");
                         return;
                     default:

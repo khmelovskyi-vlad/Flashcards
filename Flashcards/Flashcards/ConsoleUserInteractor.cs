@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Flashcards
+{
+    class ConsoleUserInteractor : IUserInteractor
+    {
+        public string QuestionAnswerInUkr(string question)
+        {
+            Console.WriteLine(question);
+            var line = Console.ReadLine();
+            var stringBuilder = new StringBuilder();
+            foreach (var sign in line)
+            {
+                if (sign == '?')
+                {
+                    stringBuilder.Append('i');
+                    continue;
+                }
+                stringBuilder.Append(sign);
+            }
+            return stringBuilder.ToString();
+        }
+        public string QuestionAnswer(string question)
+        {
+            Console.WriteLine(question);
+            return Console.ReadLine();
+        }
+        public UserAction QuestionAnswerKey(string question)
+        {
+            Console.WriteLine(question);
+            var key = Console.ReadKey(true);
+            switch (key.Key)
+            {
+                case ConsoleKey.Enter:
+                    return UserAction.Enter;
+                case ConsoleKey.L:
+                    return UserAction.L;
+                case ConsoleKey.A:
+                    return UserAction.A;
+                case ConsoleKey.Escape:
+                    return UserAction.Escape;
+                default:
+                    return UserAction.Else;
+            }
+        }
+        public void WriteLine(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+}
