@@ -12,5 +12,6 @@ namespace Flashcards
         string QuestionAnswer(string question);
         UserAction QuestionAnswerKey(string question);
         void WriteLine(string message);
+        void ClearWindow();
     }
 }

@@ -36,10 +36,10 @@ namespace Flashcards
                         await study.Run();
                         break;
                     case UserAction.Escape:
-                        Console.WriteLine("bye");
+                        userInteractor.WriteLine("bye");
                         return;
                     default:
-                        Console.WriteLine();
+                        userInteractor.WriteLine("Write else");
                         break;
                 }
             }

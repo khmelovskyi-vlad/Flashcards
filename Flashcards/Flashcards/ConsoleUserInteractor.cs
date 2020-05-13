@@ -37,12 +37,18 @@ namespace Flashcards
             {
                 case ConsoleKey.Enter:
                     return UserAction.Enter;
+                case ConsoleKey.Escape:
+                    return UserAction.Escape;
                 case ConsoleKey.L:
                     return UserAction.L;
                 case ConsoleKey.A:
                     return UserAction.A;
-                case ConsoleKey.Escape:
-                    return UserAction.Escape;
+                case ConsoleKey.T:
+                    return UserAction.T;
+                case ConsoleKey.N:
+                    return UserAction.N;
+                case ConsoleKey.B:
+                    return UserAction.B;
                 default:
                     return UserAction.Else;
             }
@@ -50,6 +56,10 @@ namespace Flashcards
         public void WriteLine(string message)
         {
             Console.WriteLine(message);
+        }
+        public void ClearWindow()
+        {
+            Console.Clear();
         }
     }
 }

@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace Flashcards
 {
-    public enum UserAction
+    enum TypesOfStudy
     {
-        Enter,
-        Escape,
-        A,
-        T,
-        L,
-        N,
-        B,
-        Else
+        noStudy,
+        normal,
+        bad,
+        fromOriginalToForeign,
+        fromForeignToOriginal
     }
 }

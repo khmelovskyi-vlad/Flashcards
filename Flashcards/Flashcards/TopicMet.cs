@@ -34,7 +34,7 @@ namespace Flashcards
                 userInteractor.WriteLine(topic);
             }
         }
-        public bool FindTopic()
+        public bool FindOrCreateTopic()
         {
             Topic = userInteractor.QuestionAnswer("Write a need topic");
             PathTopic = $"{PathAllTopics}\\{Topic}\\Flashcards.json";
@@ -48,6 +48,12 @@ namespace Flashcards
             }
             topics.Add(Topic);
             return false;
+        }
+        public bool FindTopic()
+        {
+            Topic = userInteractor.QuestionAnswer("Write a need topic");
+            PathTopic = $"{PathAllTopics}\\{Topic}\\Flashcards.json";
+            return fileMaster.FileExists(PathTopic);
         }
     }
 }

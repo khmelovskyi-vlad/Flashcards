@@ -57,6 +57,8 @@
     <Compile Include="ConsoleUserInteractor.cs" />
     <Compile Include="Study.cs" />
     <Compile Include="TopicMet.cs" />
+    <Compile Include="TypesOfStudy.cs" />
+    <Compile Include="UserTypesOfStudy.cs" />
     <Compile Include="UserAction.cs" />
   </ItemGroup>
   <ItemGroup>

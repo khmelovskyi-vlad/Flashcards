@@ -27,7 +27,7 @@ namespace Flashcards
         }
         private async Task FindData()
         {
-            if (topicMet.FindTopic())
+            if (topicMet.FindOrCreateTopic())
             {
                 var key = userInteractor.QuestionAnswerKey("If you want to watch your cards, press 'Enter', if not - press else");
                 if (key == UserAction.Enter)

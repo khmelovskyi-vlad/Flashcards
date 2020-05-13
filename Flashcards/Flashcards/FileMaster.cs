@@ -52,6 +52,10 @@ namespace Flashcards
         {
             Directory.CreateDirectory(path);
         }
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
         private async Task<string> ReadData(string path, FileStream stream)
         {
             var sb = new StringBuilder();
