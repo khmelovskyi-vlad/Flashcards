@@ -10,76 +10,83 @@ namespace Flashcards
 {
     class FileMaster
     {
-        public async Task WriteData(string path, Flashcard card)
+        public async Task WriteData(Flashcard card)
         {
-            using (var stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Write))
+            using (var context = new UserContext())
             {
-                var data = await ReadAndDesToLString(path, stream);
-                if (data == null)
-                {
-                    data = new List<Flashcard>();
-                }
-                data.Add(card);
-                stream.SetLength(0);
-                var dataJson = JsonConvert.SerializeObject(data);
-                var buffer = Encoding.Default.GetBytes(dataJson);
-                await stream.WriteAsync(buffer, 0, buffer.Length);
+                context.Flashcards.Add(card);
+                await context.SaveChangesAsync();
             }
         }
-        public async Task<List<Flashcard>> ReadData(string path)
+        public IEnumerable<Flashcard> ReadData(TopicWithFlashcards topic)
         {
-            using (var stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Write))
+            using (var context = new UserContext())
             {
-                var dataJson = await ReadData(path, stream);
-                return DesToLFlashcard(dataJson);
+                return context.Flashcards.Where(x => x.Topic == topic);
             }
         }
-        public List<string> GetDirectoriesName(string path)
+        public IEnumerable<string> GetAllTopics()
         {
-            var topicsPaths = GetDirectoriesPath(path);
-            List<string> topics = new List<string>();
-            foreach (var topicPath in topicsPaths)
+            using (var context = new UserContext())
             {
-                topics.Add(Path.GetFileName(topicPath));
+                return context.TopicWithFlashcards.Select(x => x.Name).ToList();
             }
-            return topics;
         }
-        public string[] GetDirectoriesPath(string path)
+        public IEnumerable<Flashcard> TakeAllFlashcards()
         {
-            return Directory.GetDirectories(path);
-        }
-        public void CreateDirectory(string path)
-        {
-            Directory.CreateDirectory(path);
-        }
-        public bool FileExists(string path)
-        {
-            return File.Exists(path);
-        }
-        private async Task<string> ReadData(string path, FileStream stream)
-        {
-            var sb = new StringBuilder();
-            var count = 256;
-            var buffer = new byte[count];
-            while (true)
+            using (var context = new UserContext())
             {
-                var realCount = await stream.ReadAsync(buffer, 0, count);
-                sb.Append(Encoding.Default.GetString(buffer, 0, realCount));
-                if (realCount < count)
-                {
-                    break;
-                }
+                return context.Flashcards;
             }
-            return sb.ToString();
         }
-        private List<Flashcard> DesToLFlashcard(string dataJson)
+        public async Task<TopicWithFlashcards> CreateTopic(string Topic)
         {
-            return JsonConvert.DeserializeObject<List<Flashcard>>(dataJson);
+            using (var context = new UserContext())
+            {
+                var newTopic = new TopicWithFlashcards() { Name = Topic };
+                context.TopicWithFlashcards.Add(newTopic);
+                await context.SaveChangesAsync();
+                return newTopic;
+            }
         }
-        private async Task<List<Flashcard>> ReadAndDesToLString(string path, FileStream stream)
+        public bool ContainsTopic(string topic)
         {
-            var dataJson = await ReadData(path, stream);
-            return DesToLFlashcard(dataJson);
+            using (var context = new UserContext())
+            {
+                return context.TopicWithFlashcards.Select(x => x.Name).Contains(topic);
+            }
         }
+        public TopicWithFlashcards FindNeedTopic(string topic)
+        {
+            using (var context = new UserContext())
+            {
+                return context.TopicWithFlashcards.Where(x => x.Name == topic).First();
+            }
+        }
+        //private async Task<string> ReadData(string path, FileStream stream)
+        //{
+        //    var sb = new StringBuilder();
+        //    var count = 256;
+        //    var buffer = new byte[count];
+        //    while (true)
+        //    {
+        //        var realCount = await stream.ReadAsync(buffer, 0, count);
+        //        sb.Append(Encoding.Default.GetString(buffer, 0, realCount));
+        //        if (realCount < count)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    return sb.ToString();
+        //}
+        //private List<Flashcard> DesToLFlashcard(string dataJson)
+        //{
+        //    return JsonConvert.DeserializeObject<List<Flashcard>>(dataJson);
+        //}
+        //private async Task<List<Flashcard>> ReadAndDesToLString(string path, FileStream stream)
+        //{
+        //    var dataJson = await ReadData(path, stream);
+        //    return DesToLFlashcard(dataJson);
+        //}
     }
 }

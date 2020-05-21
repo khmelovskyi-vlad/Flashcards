@@ -27,12 +27,12 @@ namespace Flashcards
         }
         private async Task FindData()
         {
-            if (topicMet.FindOrCreateTopic())
+            if (await topicMet.FindOrCreateTopic())
             {
                 var key = userInteractor.QuestionAnswerKey("If you want to watch your cards, press 'Enter', if not - press else");
                 if (key == UserAction.Enter)
                 {
-                    var flashcards = await fileMaster.ReadData(topicMet.PathTopic);
+                    var flashcards = fileMaster.ReadData(topicMet.Topic);
                     if (flashcards == null)
                     {
                         userInteractor.WriteLine("Don't have cards");
@@ -55,7 +55,7 @@ namespace Flashcards
         {
             while (true)
             {
-                var key = userInteractor.QuestionAnswerKey($"If you want enter flashcards in {topicMet.Topic}, press 'Enter',\n\r" +
+                var key = userInteractor.QuestionAnswerKey($"If you want enter flashcards in {topicMet.Topic.Name}, press 'Enter',\n\r" +
                     $"If not - press else");
                 if (key == UserAction.Enter)
                 {
@@ -63,7 +63,7 @@ namespace Flashcards
                     var transcription = userInteractor.QuestionAnswerInUkr("Write transcription");
                     var back = userInteractor.QuestionAnswerInUkr("Write back or original word");
                     var newCard = new Flashcard(topicMet.Topic, front, transcription, back);
-                    await fileMaster.WriteData(topicMet.PathTopic, newCard);
+                    await fileMaster.WriteData(newCard);
                     userInteractor.WriteLine("Your card has been added!");
                 }
                 else

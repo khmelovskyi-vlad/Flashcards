@@ -33,7 +33,7 @@ namespace Flashcards
                         break;
                     case UserAction.L:
                         Study study = new Study(fileMaster, userInteractor, topicMet);
-                        await study.Run();
+                        study.Run();
                         break;
                     case UserAction.Escape:
                         userInteractor.WriteLine("bye");

@@ -20,12 +20,10 @@ namespace Flashcards
         TopicMet topicMet;
         private List<Flashcard> flashcards;
 
-        private const string PathAllTopics = "D:\\temp\\Flashcards";
-
-        public async Task Run()
+        public void Run()
         {
             topicMet.WriteTopics();
-            if (await FindNeedCards())
+            if (FindNeedCards())
             {
                 WriteCards();
                 var typesOfStudy = FindTypesOfStudy();
@@ -102,7 +100,7 @@ namespace Flashcards
             }
             return userTypesOfStudy;
         }
-        private async Task<bool> FindNeedCards()
+        private bool FindNeedCards()
         {
             while (true)
             {
@@ -113,9 +111,9 @@ namespace Flashcards
                 switch (key)
                 {
                     case UserAction.A:
-                        return await InitializeAllCards();
+                        return InitializeAllCards();
                     case UserAction.T:
-                        return await InitializeTopicCards();
+                        return InitializeTopicCards();
                     case UserAction.Escape:
                         return false;
                     default:
@@ -124,9 +122,14 @@ namespace Flashcards
                 }
             }
         }
-        private async Task<bool> InitializeAllCards()
+        private bool InitializeAllCards()
         {
-            flashcards = await TakeAllFlashcards();
+            var flashcardsEn = fileMaster.TakeAllFlashcards();
+            flashcards = new List<Flashcard>();
+            if (flashcardsEn != null)
+            {
+                flashcards.AddRange(flashcardsEn);
+            }
             if (flashcards == new List<Flashcard>())
             {
                 userInteractor.WriteLine("You don't have any flashcards, create them");
@@ -134,11 +137,11 @@ namespace Flashcards
             }
             return true;
         }
-        private async Task<bool> InitializeTopicCards()
+        private bool InitializeTopicCards()
         {
             if (topicMet.FindTopic())
             {
-                flashcards.AddRange(await TakeFlashCards(topicMet.PathTopic));
+                flashcards.AddRange(fileMaster.ReadData(topicMet.Topic));
                 if (flashcards == null || flashcards.Count() == 0)
                 {
                     userInteractor.WriteLine("You don't have flashcards in this topic, create them");
@@ -221,20 +224,6 @@ namespace Flashcards
             {
                 return (flashcards[num].FrontOrForeignTranslation, flashcards[num].BackOrOriginalWord, flashcards[num].Transcription);
             }
-        }
-        private async Task<List<Flashcard>> TakeAllFlashcards()
-        {
-            var paths = fileMaster.GetDirectoriesPath(PathAllTopics);
-            var flashcards = new List<Flashcard>();
-            foreach (var path in paths)
-            {
-                flashcards.AddRange(await TakeFlashCards($"{path}\\Flashcards.json"));
-            }
-            return flashcards;
-        }
-        private async Task<List<Flashcard>> TakeFlashCards(string path)
-        {
-            return await fileMaster.ReadData(path);
         }
     }
 }

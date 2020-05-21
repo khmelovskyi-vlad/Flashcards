@@ -15,17 +15,23 @@ namespace Flashcards
         }
         IUserInteractor userInteractor;
         private FileMaster fileMaster;
-
-        public const string PathAllTopics = "D:\\temp\\Flashcards";
-        public string PathTopic;
-        public string Topic { get; set; }
+        
+        public TopicWithFlashcards Topic { get; set; }
         public List<string> topics;
 
 
         public void FindTopics()
         {
             userInteractor.WriteLine("All topics you have:");
-            topics = fileMaster.GetDirectoriesName(PathAllTopics);
+            var topicsEn = fileMaster.GetAllTopics();
+            topics = new List<string>();
+            Console.ReadLine();
+            userInteractor.WriteLine("lol");
+            if (topicsEn!= null)
+            {
+                topics.AddRange(topicsEn);
+            }
+            Console.ReadLine();
         }
         public void WriteTopics()
         {
@@ -34,26 +40,30 @@ namespace Flashcards
                 userInteractor.WriteLine(topic);
             }
         }
-        public bool FindOrCreateTopic()
+        public async Task<bool> FindOrCreateTopic()
         {
-            Topic = userInteractor.QuestionAnswer("Write a need topic");
-            PathTopic = $"{PathAllTopics}\\{Topic}\\Flashcards.json";
-            fileMaster.CreateDirectory($"{PathAllTopics}\\{Topic}");
-            foreach (var topic in topics)
+            var topic = userInteractor.QuestionAnswer("Write a need topic");
+            if (!fileMaster.ContainsTopic(topic))
             {
-                if (topic == Topic)
-                {
-                    return true;
-                }
+                Topic = await fileMaster.CreateTopic(topic);
             }
-            topics.Add(Topic);
+            else
+            {
+                Topic = fileMaster.FindNeedTopic(topic);
+            }
+            if (topics.Contains(topic))
+            {
+                return true;
+            }
+            topics.Add(topic);
             return false;
         }
         public bool FindTopic()
         {
-            Topic = userInteractor.QuestionAnswer("Write a need topic");
-            PathTopic = $"{PathAllTopics}\\{Topic}\\Flashcards.json";
-            return fileMaster.FileExists(PathTopic);
+            var topic = userInteractor.QuestionAnswer("Write a need topic");
+            var result = fileMaster.ContainsTopic(topic);
+            Topic = fileMaster.FindNeedTopic(topic);
+            return result;
         }
     }
 }
