@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,33 +11,33 @@ namespace Flashcards
 {
     class FileMaster
     {
-        public async Task WriteData(Flashcard card)
+        public async Task WriteData(List<Flashcard> cards)
         {
             using (var context = new UserContext())
             {
-                context.Flashcards.Add(card);
+                context.Flashcards.AddRange(cards);
                 await context.SaveChangesAsync();
             }
         }
-        public IEnumerable<Flashcard> ReadData(TopicWithFlashcards topic)
+        public List<Flashcard> ReadData(TopicWithFlashcards topic)
         {
             using (var context = new UserContext())
             {
-                return context.Flashcards.Where(x => x.Topic == topic);
+                return context.Flashcards.AsNoTracking().ToList().Where(x => x.Topic.Id == topic.Id).ToList();
             }
         }
-        public IEnumerable<string> GetAllTopics()
+        public List<string> GetAllTopics()
         {
             using (var context = new UserContext())
             {
                 return context.TopicWithFlashcards.Select(x => x.Name).ToList();
             }
         }
-        public IEnumerable<Flashcard> TakeAllFlashcards()
+        public List<Flashcard> TakeAllFlashcards()
         {
             using (var context = new UserContext())
             {
-                return context.Flashcards;
+                return context.Flashcards.ToList();
             }
         }
         public async Task<TopicWithFlashcards> CreateTopic(string Topic)
@@ -60,7 +61,9 @@ namespace Flashcards
         {
             using (var context = new UserContext())
             {
-                return context.TopicWithFlashcards.Where(x => x.Name == topic).First();
+                var needTopics = context.TopicWithFlashcards.Where(x => x.Name == topic).ToList();
+                var needTopic = needTopics.First();
+                return needTopic;
             }
         }
         //private async Task<string> ReadData(string path, FileStream stream)

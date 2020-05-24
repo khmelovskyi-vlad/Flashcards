@@ -12,11 +12,11 @@ namespace Flashcards
         static async Task<int> Main(string[] args)
         {
             //Console.ReadLine();
-            using (var context = new UserContext())
-            {
-                context.TopicWithFlashcards.Add(new TopicWithFlashcards() { Name = "new"});
-                context.SaveChanges();
-            }
+            //using (var context = new UserContext())
+            //{
+            //    context.TopicWithFlashcards.Add(new TopicWithFlashcards() { Name = "new"});
+            //    context.SaveChanges();
+            //}
             //Console.ReadLine();
             ModeSelector modeSelector = new ModeSelector(new ConsoleUserInteractor());
             await modeSelector.Run();

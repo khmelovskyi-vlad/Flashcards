@@ -41,7 +41,7 @@ namespace Flashcards
                     {
                         foreach (var flashcard in flashcards)
                         {
-                            userInteractor.WriteLine($"{flashcard.Topic} - " +
+                            userInteractor.WriteLine($"{flashcard.Topic.Name} - " +
                                 $"{flashcard.FrontOrForeignTranslation} - " +
                                 $"{flashcard.Transcription} - " +
                                 $"{flashcard.BackOrOriginalWord}");
@@ -53,6 +53,7 @@ namespace Flashcards
         }
         private async Task EnterData()
         {
+            var newCards = new List<Flashcard>();
             while (true)
             {
                 var key = userInteractor.QuestionAnswerKey($"If you want enter flashcards in {topicMet.Topic.Name}, press 'Enter',\n\r" +
@@ -62,12 +63,17 @@ namespace Flashcards
                     var front = userInteractor.QuestionAnswerInUkr("Write front or foreign translation");
                     var transcription = userInteractor.QuestionAnswerInUkr("Write transcription");
                     var back = userInteractor.QuestionAnswerInUkr("Write back or original word");
-                    var newCard = new Flashcard(topicMet.Topic, front, transcription, back);
-                    await fileMaster.WriteData(newCard);
+                    newCards.Add( new Flashcard(topicMet.Topic.Id, front, transcription, back));
                     userInteractor.WriteLine("Your card has been added!");
                 }
                 else
                 {
+                    var key2 = userInteractor.QuestionAnswerKey($"If you want to save flashcards in {topicMet.Topic.Name}, press 'Enter',\n\r" +
+                        $"If not - press else");
+                    if (key2 == UserAction.Enter)
+                    {
+                        await fileMaster.WriteData(newCards);
+                    }
                     return;
                 }
             }

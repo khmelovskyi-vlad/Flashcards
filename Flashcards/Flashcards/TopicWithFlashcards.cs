@@ -10,6 +10,6 @@ namespace Flashcards
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Flashcard> Flashcards { get; set; }
+        public virtual List<Flashcard> Flashcards { get; set; }
     }
 }

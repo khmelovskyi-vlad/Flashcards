@@ -22,19 +22,11 @@ namespace Flashcards
 
         public void FindTopics()
         {
-            userInteractor.WriteLine("All topics you have:");
-            var topicsEn = fileMaster.GetAllTopics();
-            topics = new List<string>();
-            Console.ReadLine();
-            userInteractor.WriteLine("lol");
-            if (topicsEn!= null)
-            {
-                topics.AddRange(topicsEn);
-            }
-            Console.ReadLine();
+            topics = fileMaster.GetAllTopics();
         }
         public void WriteTopics()
         {
+            userInteractor.WriteLine("All topics you have:");
             foreach (var topic in topics)
             {
                 userInteractor.WriteLine(topic);

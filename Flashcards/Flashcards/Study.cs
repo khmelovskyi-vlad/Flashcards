@@ -124,12 +124,7 @@ namespace Flashcards
         }
         private bool InitializeAllCards()
         {
-            var flashcardsEn = fileMaster.TakeAllFlashcards();
-            flashcards = new List<Flashcard>();
-            if (flashcardsEn != null)
-            {
-                flashcards.AddRange(flashcardsEn);
-            }
+            flashcards = fileMaster.TakeAllFlashcards();
             if (flashcards == new List<Flashcard>())
             {
                 userInteractor.WriteLine("You don't have any flashcards, create them");
