@@ -32,8 +32,8 @@ namespace Flashcards
                 var key = userInteractor.QuestionAnswerKey("If you want to watch your cards, press 'Enter', if not - press else");
                 if (key == UserAction.Enter)
                 {
-                    var flashcards = fileMaster.ReadData(topicMet.Topic);
-                    if (flashcards == null)
+                    var flashcards = await fileMaster.ReadData(topicMet.Topic);
+                    if (flashcards == null || flashcards.Count == 0)
                     {
                         userInteractor.WriteLine("Don't have cards");
                     }

@@ -20,9 +20,9 @@ namespace Flashcards
         public List<string> topics;
 
 
-        public void FindTopics()
+        public async Task FindTopics()
         {
-            topics = fileMaster.GetAllTopics();
+            topics = await fileMaster.GetAllTopics();
         }
         public void WriteTopics()
         {
@@ -35,26 +35,23 @@ namespace Flashcards
         public async Task<bool> FindOrCreateTopic()
         {
             var topic = userInteractor.QuestionAnswer("Write a need topic");
-            if (!fileMaster.ContainsTopic(topic))
+            if (!await fileMaster.ContainsTopic(topic))
             {
                 Topic = await fileMaster.CreateTopic(topic);
+                topics.Add(topic);
+                return false;
             }
             else
             {
-                Topic = fileMaster.FindNeedTopic(topic);
-            }
-            if (topics.Contains(topic))
-            {
+                Topic = await fileMaster.FindNeedTopic(topic);
                 return true;
             }
-            topics.Add(topic);
-            return false;
         }
-        public bool FindTopic()
+        public async Task<bool> FindTopic()
         {
             var topic = userInteractor.QuestionAnswer("Write a need topic");
-            var result = fileMaster.ContainsTopic(topic);
-            Topic = fileMaster.FindNeedTopic(topic);
+            var result = await fileMaster.ContainsTopic(topic);
+            Topic = await fileMaster.FindNeedTopic(topic);
             return result;
         }
     }

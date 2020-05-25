@@ -19,25 +19,27 @@ namespace Flashcards
                 await context.SaveChangesAsync();
             }
         }
-        public List<Flashcard> ReadData(TopicWithFlashcards topic)
+        public async Task<List<Flashcard>> ReadData(TopicWithFlashcards topic)
         {
             using (var context = new UserContext())
             {
-                return context.TopicWithFlashcards.First(x => x.Id == topic.Id).Flashcards.ToList();
+                var needTopic = await context.TopicWithFlashcards.FirstAsync(x => x.Id == topic.Id);
+                return needTopic.Flashcards.ToList();
             }
         }
-        public List<string> GetAllTopics()
+        public async Task<List<string>> GetAllTopics()
         {
             using (var context = new UserContext())
             {
-                return context.TopicWithFlashcards.Select(x => x.Name).ToList();
+                return await context.TopicWithFlashcards.Select(x => x.Name).ToListAsync();
             }
         }
-        public List<Flashcard> TakeAllFlashcards()
+        public async Task<List<Flashcard>> TakeAllFlashcards()
         {
             using (var context = new UserContext())
             {
-                return context.TopicWithFlashcards.ToList().SelectMany(x => x.Flashcards).ToList();
+                var needTopics = await context.TopicWithFlashcards.ToListAsync();
+                return needTopics.SelectMany(x => x.Flashcards).ToList();
             }
         }
         public async Task<TopicWithFlashcards> CreateTopic(string Topic)
@@ -50,20 +52,18 @@ namespace Flashcards
                 return newTopic;
             }
         }
-        public bool ContainsTopic(string topic)
+        public async Task<bool> ContainsTopic(string topic)
         {
             using (var context = new UserContext())
             {
-                return context.TopicWithFlashcards.Select(x => x.Name).Contains(topic);
+                return await context.TopicWithFlashcards.Select(x => x.Name).ContainsAsync(topic);
             }
         }
-        public TopicWithFlashcards FindNeedTopic(string topic)
+        public async Task<TopicWithFlashcards> FindNeedTopic(string topic)
         {
             using (var context = new UserContext())
             {
-                var needTopics = context.TopicWithFlashcards.Where(x => x.Name == topic).ToList();
-                var needTopic = needTopics.First();
-                return needTopic;
+                return await context.TopicWithFlashcards.Where(x => x.Name == topic).FirstAsync();
             }
         }
         //private async Task<string> ReadData(string path, FileStream stream)

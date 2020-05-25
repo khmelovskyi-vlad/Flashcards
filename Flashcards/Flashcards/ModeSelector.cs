@@ -18,7 +18,7 @@ namespace Flashcards
         public async Task Run()
         {
             topicMet = new TopicMet(fileMaster, userInteractor);
-            topicMet.FindTopics();
+            await topicMet.FindTopics();
             while (true)
             {
                 var key = userInteractor.QuestionAnswerKey("What do you want to do?\n\r" +
@@ -33,7 +33,7 @@ namespace Flashcards
                         break;
                     case UserAction.L:
                         Study study = new Study(fileMaster, userInteractor, topicMet);
-                        study.Run();
+                        await study.Run();
                         break;
                     case UserAction.Escape:
                         userInteractor.WriteLine("bye");

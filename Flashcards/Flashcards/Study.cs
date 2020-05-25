@@ -20,10 +20,10 @@ namespace Flashcards
         TopicMet topicMet;
         private List<Flashcard> flashcards;
 
-        public void Run()
+        public async Task Run()
         {
             topicMet.WriteTopics();
-            if (FindNeedCards())
+            if (await FindNeedCards())
             {
                 WriteCards();
                 var typesOfStudy = FindTypesOfStudy();
@@ -107,7 +107,7 @@ namespace Flashcards
             }
             return userTypesOfStudy;
         }
-        private bool FindNeedCards()
+        private async Task<bool> FindNeedCards()
         {
             while (true)
             {
@@ -118,9 +118,9 @@ namespace Flashcards
                 switch (key)
                 {
                     case UserAction.A:
-                        return InitializeAllCards();
+                        return await InitializeAllCards();
                     case UserAction.T:
-                        return InitializeTopicCards();
+                        return await InitializeTopicCards();
                     case UserAction.Escape:
                         return false;
                     default:
@@ -129,9 +129,9 @@ namespace Flashcards
                 }
             }
         }
-        private bool InitializeAllCards()
+        private async Task<bool> InitializeAllCards()
         {
-            flashcards = fileMaster.TakeAllFlashcards();
+            flashcards = await fileMaster.TakeAllFlashcards();
             if (flashcards == null || flashcards.Count() == 0)
             {
                 userInteractor.WriteLine("You don't have any flashcards, create them");
@@ -139,11 +139,11 @@ namespace Flashcards
             }
             return true;
         }
-        private bool InitializeTopicCards()
+        private async Task<bool> InitializeTopicCards()
         {
-            if (topicMet.FindTopic())
+            if (await topicMet.FindTopic())
             {
-                flashcards.AddRange(fileMaster.ReadData(topicMet.Topic));
+                flashcards.AddRange(await fileMaster.ReadData(topicMet.Topic));
                 if (flashcards == null || flashcards.Count() == 0)
                 {
                     userInteractor.WriteLine("You don't have flashcards in this topic, create them");
