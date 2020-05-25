@@ -11,7 +11,7 @@ namespace Flashcards
 {
     class FileMaster
     {
-        public async Task WriteData(List<Flashcard> cards)
+        public async Task WriteFlashcards(List<Flashcard> cards)
         {
             using (var context = new UserContext())
             {
@@ -23,7 +23,7 @@ namespace Flashcards
         {
             using (var context = new UserContext())
             {
-                return context.Flashcards.AsNoTracking().ToList().Where(x => x.Topic.Id == topic.Id).ToList();
+                return context.TopicWithFlashcards.First(x => x.Id == topic.Id).Flashcards.ToList();
             }
         }
         public List<string> GetAllTopics()
@@ -37,7 +37,7 @@ namespace Flashcards
         {
             using (var context = new UserContext())
             {
-                return context.Flashcards.ToList();
+                return context.TopicWithFlashcards.ToList().SelectMany(x => x.Flashcards).ToList();
             }
         }
         public async Task<TopicWithFlashcards> CreateTopic(string Topic)

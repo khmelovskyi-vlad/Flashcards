@@ -54,6 +54,7 @@ namespace Flashcards
         private async Task EnterData()
         {
             var newCards = new List<Flashcard>();
+            var needSave = false;
             while (true)
             {
                 var key = userInteractor.QuestionAnswerKey($"If you want enter flashcards in {topicMet.Topic.Name}, press 'Enter',\n\r" +
@@ -65,14 +66,18 @@ namespace Flashcards
                     var back = userInteractor.QuestionAnswerInUkr("Write back or original word");
                     newCards.Add( new Flashcard(topicMet.Topic.Id, front, transcription, back));
                     userInteractor.WriteLine("Your card has been added!");
+                    needSave = true;
                 }
                 else
                 {
-                    var key2 = userInteractor.QuestionAnswerKey($"If you want to save flashcards in {topicMet.Topic.Name}, press 'Enter',\n\r" +
-                        $"If not - press else");
-                    if (key2 == UserAction.Enter)
+                    if (needSave)
                     {
-                        await fileMaster.WriteData(newCards);
+                        var key2 = userInteractor.QuestionAnswerKey($"If you want to save flashcards in {topicMet.Topic.Name}, press 'Enter',\n\r" +
+                            $"If not - press else");
+                        if (key2 == UserAction.Enter)
+                        {
+                            await fileMaster.WriteFlashcards(newCards);
+                        }
                     }
                     return;
                 }

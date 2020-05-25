@@ -27,7 +27,7 @@ namespace Flashcards
             {
                 WriteCards();
                 var typesOfStudy = FindTypesOfStudy();
-                if (typesOfStudy.TypeOfStudy != TypesOfStudy.noStudy)
+                if (typesOfStudy.TypeOfStudy != TypesOfStudy.noStudy && typesOfStudy.TypeOfTranslation != TypesOfStudy.noStudy)
                 {
                     StudyMet(typesOfStudy);
                 }
@@ -40,16 +40,15 @@ namespace Flashcards
             {
                 foreach (var flashcard in flashcards)
                 {
-                    userInteractor.WriteLine($"{flashcard.Topic} - " +
+                    userInteractor.WriteLine($"{flashcard.Topic.Name} - " +
                         $"{flashcard.FrontOrForeignTranslation} - " +
                         $"{flashcard.Transcription} - " +
                         $"{flashcard.BackOrOriginalWord}");
                 }
             }
         }
-        private UserTypesOfStudy FindTypesOfStudy()
+        private TypesOfStudy FindUserActionStudy()
         {
-            UserTypesOfStudy userTypesOfStudy = new UserTypesOfStudy();
             while (true)
             {
                 var key = userInteractor.QuestionAnswerKey($"If you want to {TypesOfStudy.normal} study, press 'n',\n\r" +
@@ -57,23 +56,24 @@ namespace Flashcards
                     "If you want to exit, press 'Escape'");
                 if (key == UserAction.N)
                 {
-                    userTypesOfStudy.TypeOfStudy = TypesOfStudy.normal;
-                    break;
+                    return TypesOfStudy.normal;
                 }
                 else if (key == UserAction.B)
                 {
-                    userTypesOfStudy.TypeOfStudy = TypesOfStudy.bad;
-                    break;
+                    return TypesOfStudy.bad;
                 }
                 else if (key == UserAction.Escape)
                 {
-                    return new UserTypesOfStudy(TypesOfStudy.noStudy, TypesOfStudy.noStudy);
+                    return TypesOfStudy.noStudy;
                 }
                 else
                 {
                     userInteractor.WriteLine("Write else");
                 }
             }
+        }
+        private TypesOfStudy FindUserActionTranslation()
+        {
             while (true)
             {
                 var key = userInteractor.QuestionAnswerKey($"If you want to translate {TypesOfStudy.fromOriginalToForeign}, press 'n',\n\r" +
@@ -81,22 +81,29 @@ namespace Flashcards
                     "If you want to exit, press 'Escape'");
                 if (key == UserAction.N)
                 {
-                    userTypesOfStudy.TypeOfTranslation = TypesOfStudy.fromOriginalToForeign;
-                    break;
+                    return TypesOfStudy.fromOriginalToForeign;
                 }
                 else if (key == UserAction.B)
                 {
-                    userTypesOfStudy.TypeOfTranslation = TypesOfStudy.fromForeignToOriginal;
-                    break;
+                    return TypesOfStudy.fromForeignToOriginal;
                 }
                 else if (key == UserAction.Escape)
                 {
-                    return new UserTypesOfStudy(TypesOfStudy.noStudy, TypesOfStudy.noStudy);
+                    return TypesOfStudy.noStudy;
                 }
                 else
                 {
                     userInteractor.WriteLine("Write else");
                 }
+            }
+        }
+        private UserTypesOfStudy FindTypesOfStudy()
+        {
+            UserTypesOfStudy userTypesOfStudy = new UserTypesOfStudy();
+            userTypesOfStudy.TypeOfStudy = FindUserActionStudy();
+            if (userTypesOfStudy.TypeOfStudy != TypesOfStudy.noStudy)
+            {
+                userTypesOfStudy.TypeOfTranslation = FindUserActionTranslation();
             }
             return userTypesOfStudy;
         }
@@ -125,7 +132,7 @@ namespace Flashcards
         private bool InitializeAllCards()
         {
             flashcards = fileMaster.TakeAllFlashcards();
-            if (flashcards == new List<Flashcard>())
+            if (flashcards == null || flashcards.Count() == 0)
             {
                 userInteractor.WriteLine("You don't have any flashcards, create them");
                 return false;
@@ -153,8 +160,7 @@ namespace Flashcards
         private void StudyMet(UserTypesOfStudy userTypesOfStudy)
         {
             var key = userInteractor.QuestionAnswerKey("If you want to continue, press 'Enter',\n\r" +
-                "if you want to end, press 'Escape',\n\r" +
-                "if you agree, press 'Enter'");
+                "If you want to end, press 'Escape',\n\r");
             if (key == UserAction.Enter)
             {
                 Random rand = new Random();
@@ -178,7 +184,7 @@ namespace Flashcards
                 var(question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
                 userInteractor.QuestionAnswerKey(question);
                 var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
-                    $"tr - {transcription}");
+                    $"transcription - {transcription}");
                 if (key == UserAction.Escape)
                 {
                     return;
@@ -200,7 +206,7 @@ namespace Flashcards
                     userInteractor.WriteLine("You are wrong");
                 }
                 var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
-                    $"tr - {transcription}");
+                    $"transcription - {transcription}");
                 if (key == UserAction.Escape)
                 {
                     return;

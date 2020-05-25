@@ -26,12 +26,12 @@ namespace Flashcards
         }
         public string QuestionAnswer(string question)
         {
-            Console.WriteLine(question);
+            Console.WriteLine($"\n\r{question}");
             return Console.ReadLine();
         }
         public UserAction QuestionAnswerKey(string question)
         {
-            Console.WriteLine(question);
+            Console.WriteLine($"\n\r{question}");
             var key = Console.ReadKey(true);
             switch (key.Key)
             {
