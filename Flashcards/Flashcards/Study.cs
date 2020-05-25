@@ -29,7 +29,7 @@ namespace Flashcards
                 var typesOfStudy = FindTypesOfStudy();
                 if (typesOfStudy.TypeOfStudy != TypesOfStudy.noStudy && typesOfStudy.TypeOfTranslation != TypesOfStudy.noStudy)
                 {
-                    StudyMet(typesOfStudy);
+                    await StudyMet(typesOfStudy);
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace Flashcards
                 return false;
             }
         }
-        private void StudyMet(UserTypesOfStudy userTypesOfStudy)
+        private async Task StudyMet(UserTypesOfStudy userTypesOfStudy)
         {
             var key = userInteractor.QuestionAnswerKey("If you want to continue, press 'Enter',\n\r" +
                 "If you want to end, press 'Escape',\n\r");
@@ -167,51 +167,83 @@ namespace Flashcards
                 switch (userTypesOfStudy.TypeOfStudy)
                 {
                     case TypesOfStudy.normal:
-                        NormalStudy(userTypesOfStudy.TypeOfTranslation, rand);
+                        await NormalStudy(userTypesOfStudy.TypeOfTranslation, rand);
                         break;
                     case TypesOfStudy.bad:
-                        BadStudy(userTypesOfStudy.TypeOfTranslation, rand);
+                        await BadStudy(userTypesOfStudy.TypeOfTranslation, rand);
                         break;
                     default:
                         break;
                 }
             }
         }
-        private void NormalStudy(TypesOfStudy typeOfTranslation, Random rand)
+        //private void NormalStudy(TypesOfStudy typeOfTranslation, Random rand)
+        //{
+        //    while (true)
+        //    {
+        //        var(question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
+        //        userInteractor.QuestionAnswerKey(question);
+        //        var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
+        //            $"transcription - {transcription}");
+        //        if (key == UserAction.Escape)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
+        private async Task NormalStudy(TypesOfStudy typeOfTranslation, Random rand)
         {
-            while (true)
+            var (question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
+            userInteractor.QuestionAnswerKey(question);
+            var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
+                $"transcription - {transcription}");
+            if (key == UserAction.Escape)
             {
-                var(question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
-                userInteractor.QuestionAnswerKey(question);
-                var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
-                    $"transcription - {transcription}");
-                if (key == UserAction.Escape)
-                {
-                    return;
-                }
+                return;
             }
+            await NormalStudy(typeOfTranslation, rand);
         }
-        private void BadStudy(TypesOfStudy typeOfTranslation, Random rand)
+        //private void BadStudy(TypesOfStudy typeOfTranslation, Random rand)
+        //{
+        //    while (true)
+        //    {
+        //        var (question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
+        //        var word = userInteractor.QuestionAnswer(question);
+        //        if (word == answer)
+        //        {
+        //            userInteractor.WriteLine("You are right");
+        //        }
+        //        else
+        //        {
+        //            userInteractor.WriteLine("You are wrong");
+        //        }
+        //        var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
+        //            $"transcription - {transcription}");
+        //        if (key == UserAction.Escape)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
+        private async Task BadStudy(TypesOfStudy typeOfTranslation, Random rand)
         {
-            while (true)
+            var (question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
+            var word = userInteractor.QuestionAnswer(question);
+            if (word == answer)
             {
-                var (question, answer, transcription) = FindNeedCardData(typeOfTranslation, rand);
-                var word = userInteractor.QuestionAnswer(question);
-                if (word == answer)
-                {
-                    userInteractor.WriteLine("You are right");
-                }
-                else
-                {
-                    userInteractor.WriteLine("You are wrong");
-                }
-                var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
-                    $"transcription - {transcription}");
-                if (key == UserAction.Escape)
-                {
-                    return;
-                }
+                userInteractor.WriteLine("You are right");
             }
+            else
+            {
+                userInteractor.WriteLine("You are wrong");
+            }
+            var key = userInteractor.QuestionAnswerKey($"{answer},\n\r" +
+                $"transcription - {transcription}");
+            if (key == UserAction.Escape)
+            {
+                return;
+            }
+            await BadStudy(typeOfTranslation, rand);
         }
         private (string question, string answer, string transcription) FindNeedCardData(TypesOfStudy typeOfTranslation, Random rand)
         {
