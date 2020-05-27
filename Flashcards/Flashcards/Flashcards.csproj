@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deletion.cs" />
     <Compile Include="FileMaster.cs" />
     <Compile Include="Flashcard.cs" />
     <Compile Include="Input.cs" />

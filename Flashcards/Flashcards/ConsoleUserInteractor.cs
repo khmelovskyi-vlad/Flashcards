@@ -45,6 +45,8 @@ namespace Flashcards
                     return UserAction.A;
                 case ConsoleKey.T:
                     return UserAction.T;
+                case ConsoleKey.C:
+                    return UserAction.C;
                 case ConsoleKey.N:
                     return UserAction.N;
                 case ConsoleKey.B:

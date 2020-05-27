@@ -17,8 +17,7 @@ namespace Flashcards
         private FileMaster fileMaster;
         private IUserInteractor userInteractor;
         TopicMet topicMet;
-
-        private const string PathAllTopics = "D:\\temp\\Flashcards";
+        
 
         public async Task Run()
         {

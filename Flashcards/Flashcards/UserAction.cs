@@ -15,6 +15,7 @@ namespace Flashcards
         L,
         N,
         B,
-        Else
+        Else,
+        F
     }
 }
