@@ -143,7 +143,7 @@ namespace Flashcards
         {
             if (await topicMet.FindTopic())
             {
-                flashcards.AddRange(await fileMaster.ReadData(topicMet.Topic));
+                flashcards.AddRange(topicMet.Topic.Flashcards);
                 if (flashcards == null || flashcards.Count() == 0)
                 {
                     userInteractor.WriteLine("You don't have flashcards in this topic, create them");

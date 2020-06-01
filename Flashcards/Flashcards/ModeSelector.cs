@@ -24,6 +24,7 @@ namespace Flashcards
                 var key = userInteractor.QuestionAnswerKey("What do you want to do?\n\r" +
                     "If you want to add cards, press 'a'\n\r" +
                     "If you want to learn cards, press 'l'\n\r" +
+                    "If you want to delete topics or flashcards, press 'd'\n\r" +
                     "If you want to exit the application, press 'Esc'");
                 switch (key)
                 {
@@ -34,6 +35,10 @@ namespace Flashcards
                     case UserAction.L:
                         Study study = new Study(fileMaster, userInteractor, topicMet);
                         await study.Run();
+                        break;
+                    case UserAction.D:
+                        Deletion deletion = new Deletion(fileMaster, userInteractor, topicMet);
+                        await deletion.Run();
                         break;
                     case UserAction.Escape:
                         userInteractor.WriteLine("bye");

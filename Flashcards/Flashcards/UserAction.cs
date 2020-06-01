@@ -11,6 +11,7 @@ namespace Flashcards
         Enter,
         Escape,
         A,
+        D,
         T,
         L,
         N,

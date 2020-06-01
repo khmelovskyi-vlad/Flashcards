@@ -41,12 +41,14 @@ namespace Flashcards
                     return UserAction.Escape;
                 case ConsoleKey.L:
                     return UserAction.L;
+                case ConsoleKey.F:
+                    return UserAction.F;
                 case ConsoleKey.A:
                     return UserAction.A;
                 case ConsoleKey.T:
                     return UserAction.T;
-                case ConsoleKey.C:
-                    return UserAction.C;
+                case ConsoleKey.D:
+                    return UserAction.D;
                 case ConsoleKey.N:
                     return UserAction.N;
                 case ConsoleKey.B:
